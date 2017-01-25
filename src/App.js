@@ -2,56 +2,35 @@ import React, {Component} from 'react';
 import './App.css';
 import MenuBar from './MenuBar';
 import KanbanBoard from './KanbanBoard';
+import TaskList from './TaskList';
+import Task from './Task';
 
 class App extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = {
+            taskLists: [
+                new TaskList('BackLog', [
+                    new Task('Add decorator support', 'This is needed to improve readability'),
+                    new Task('Merge with some themeforest template', 'Default bootstrap theme is ugly')
+                ]),
+                new TaskList('Doing', [
+                    new Task('Create backend', 'Try node, it\'s fast and light on server-side'),
+                    new Task('Integrate OAuth', 'Users should use their Google/Whatever accounts')
+                ]),
+                new TaskList('Done', [
+                    new Task('Create Git Repo', 'We need undo support for project')
+                ])
+            ]
+        };
     }
 
     render() {
-
-        const kanban = {
-            lists: [
-                {
-                    title: 'Backlog',
-                    tasks: [
-                        {
-                            title: 'Support unlimited lists',
-                            summary: 'Try to show more than 4 lists'
-                        },
-                        {
-                            title: 'Google Accounts Integration',
-                            summary: 'It\'s possible to use google accounts for board members?'
-                        }
-                    ]
-                },
-                {
-                    title: 'Doing',
-                    tasks: [
-                        {
-                            title: 'Test',
-                            summary: 'Do something'
-                        }
-                    ]
-                },
-                {
-                    title: 'Done',
-                    tasks: [
-                        {
-                            title: 'Test',
-                            summary: 'Do something'
-                        }
-                    ]
-                }
-            ]
-        };
-
         return (
             <div className="App">
                 <MenuBar/>
-                <KanbanBoard kanban={kanban} />
+                <KanbanBoard taskLists={this.state.taskLists} />
             </div>
         );
     }
