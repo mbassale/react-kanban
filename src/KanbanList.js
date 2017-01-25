@@ -4,36 +4,40 @@
 import React, {Component} from 'react';
 import {Row, Col} from 'react-bootstrap';
 import KanbanTask from './KanbanTask';
+import {observer} from 'mobx-react';
+import * as lodash from 'lodash';
 
-class KanbanList extends Component {
+const KanbanList = observer(
+    class KanbanList extends Component {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            title: props.title,
-            tasks: props.tasks
-        };
-    }
+        constructor(props) {
+            super(props);
+            this.state = {
+                taskList: props.taskList
+            };
+        }
 
-    render() {
+        render() {
 
-        const taskList = this.state.tasks.map((task, index) => {
-                return <KanbanTask title={task.title} summary={task.summary}/>;
+            const taskList = this.state.taskList.tasks.map((task, index) => {
+                return <KanbanTask key={index} task={task} />;
             });
+            const title = lodash.truncate(this.state.taskList.title, {'length': 16});
 
-        return (
-            <Col xs={6} md={2}>
-                <Row>
-                    <h4 className="text-center">{this.state.title}</h4>
-                </Row>
-                <Row>
-                    <Col xs={12}>
-                        {taskList}
-                    </Col>
-                </Row>
-            </Col>
-        );
+            return (
+                <Col xs={6} md={2}>
+                    <Row>
+                        <h4 className="text-center">{title}</h4>
+                    </Row>
+                    <Row>
+                        <Col xs={12}>
+                            {taskList}
+                        </Col>
+                    </Row>
+                </Col>
+            );
+        }
     }
-}
+);
 
 export default KanbanList;
