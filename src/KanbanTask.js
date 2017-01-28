@@ -10,22 +10,24 @@ import './KanbanTask.css';
 const KanbanTask = observer(
     class KanbanTask extends Component {
 
-        editTitle = '';
-        editSummary = '';
-        editDescription = '';
+        task = null;
 
         constructor(props) {
             super(props);
+            this.task = props.task;
             this.state = {
                 editMode: false,
-                task: props.task
+                editTitle: props.task.title,
+                editSummary: props.task.summary,
+                editDescription: props.task.description
             };
+            this.editTitle = lodash.clone(props.task.title);
+            this.editSummary = lodash.clone(props.task.summary);
+            this.editDescription = lodash.clone(props.task.description);
             this.handleEdit = this.handleEdit.bind(this);
             this.handleSave = this.handleSave.bind(this);
             this.handleCancel = this.handleCancel.bind(this);
-            this.handleTitleChange = this.handleTitleChange.bind(this);
-            this.handleSummaryChange = this.handleSummaryChange.bind(this);
-            this.handleDescriptionChange = this.handleDescriptionChange.bind(this);
+            this.handleChange = this.handleChange.bind(this);
         }
 
         handleEdit() {
@@ -35,43 +37,57 @@ const KanbanTask = observer(
         }
 
         handleSave() {
-            this.state.task.title = this.editTitle;
-            this.state.task.summary = this.editSummary;
-            this.state.task.description = this.editDescription;
+            this.task.title = this.state.editTitle;
+            this.task.summary = this.state.editSummary;
+            this.task.description = this.state.editDescription;
             this.setState({
                 editMode: false
             });
         }
 
         handleCancel() {
-            this.editTitle = '';
-            this.editSummary = '';
-            this.editDescription = '';
             this.setState({
+                editTitle: this.task.title,
+                editSummary: this.task.summary,
+                editDescription: this.task.description,
                 editMode: false
             });
         }
 
-        handleTitleChange(e) {
-            this.editTitle = e.target.value;
-        }
-
-        handleSummaryChange(e) {
-            this.editSummary = e.target.value;
-        }
-
-        handleDescriptionChange(e) {
-            this.editDescription = e.target.value;
+        handleChange(e) {
+            let newState = null;
+            switch(e.target.name) {
+                case 'title':
+                    newState = {
+                        editTitle: e.target.value
+                    };
+                    break;
+                case 'summary':
+                    newState = {
+                        editSummary: e.target.value
+                    };
+                    break;
+                case 'description':
+                    newState = {
+                        editDescription: e.target.value
+                    };
+                    break;
+            }
+            if (newState) {
+                this.setState(newState);
+            }
         }
 
         render() {
-            const title = lodash.truncate(this.state.task.title, {'length': 24});
+            const title = lodash.truncate(this.state.editTitle, {'length': 24});
 
             let panelTitle = null;
             if (this.state.editMode) {
                 panelTitle = (
                     <div className="pull-left">
-                        <FormControl placeholder={title} className="form-control input-sm taskTitleEditor" onChange={this.handleTitleChange} />
+                        <FormControl name="title" placeholder={this.state.editTitle} className="form-control input-sm taskTitleEditor"
+                                     value={this.state.editTitle}
+                                     onChange={this.handleChange} />
                     </div>
                 );
             } else {
@@ -108,11 +124,13 @@ const KanbanTask = observer(
                     <form>
                         <FormGroup>
                             <ControlLabel>Summary</ControlLabel>
-                            <FormControl componentClass="textarea" placeholder="Summary..." onChange={this.handleSummaryChange} />
+                            <FormControl name="summary" componentClass="textarea" placeholder="Summary..."
+                                         onChange={this.handleChange} />
                         </FormGroup>
                         <FormGroup>
                             <ControlLabel>Description</ControlLabel>
-                            <FormControl componentClass="textarea" placeholder="Description..." onChange={this.handleDescriptionChange} />
+                            <FormControl name="description" componentClass="textarea" placeholder="Description..."
+                                         onChange={this.handleChange} />
                         </FormGroup>
                     </form>
                 );
@@ -122,15 +140,15 @@ const KanbanTask = observer(
                         <FormGroup>
                             <ControlLabel>Summary</ControlLabel>
                             <FormControl.Static>
-                                {this.state.task.summary}
+                                {this.state.editSummary}
                             </FormControl.Static>
                         </FormGroup>
                         {
-                            this.state.task.description &&
+                            this.state.editDescription &&
                             <FormGroup>
                                 <ControlLabel>Description</ControlLabel>
                                 <FormControl.Static>
-                                    {this.state.task.description}
+                                    {this.state.editDescription}
                                 </FormControl.Static>
                             </FormGroup>
                         }
