@@ -28,6 +28,7 @@ const KanbanTask = observer(
             this.handleSave = this.handleSave.bind(this);
             this.handleCancel = this.handleCancel.bind(this);
             this.handleChange = this.handleChange.bind(this);
+            this.handleDoubleClick = this.handleDoubleClick.bind(this);
         }
 
         handleEdit() {
@@ -78,6 +79,12 @@ const KanbanTask = observer(
             }
         }
 
+        handleDoubleClick(e) {
+            this.setState({
+                editMode: true
+            });
+        }
+
         render() {
             const title = lodash.truncate(this.state.editTitle, {'length': 24});
 
@@ -91,7 +98,9 @@ const KanbanTask = observer(
                     </div>
                 );
             } else {
-                panelTitle = title;
+                panelTitle = (
+                    <span onDoubleClick={this.handleDoubleClick}>{title}</span>
+                );
             }
 
             let panelOptions = null;
@@ -125,11 +134,13 @@ const KanbanTask = observer(
                         <FormGroup>
                             <ControlLabel>Summary</ControlLabel>
                             <FormControl name="summary" componentClass="textarea" placeholder="Summary..."
+                                         value={this.state.editSummary}
                                          onChange={this.handleChange} />
                         </FormGroup>
                         <FormGroup>
                             <ControlLabel>Description</ControlLabel>
                             <FormControl name="description" componentClass="textarea" placeholder="Description..."
+                                         value={this.state.editDescription}
                                          onChange={this.handleChange} />
                         </FormGroup>
                     </form>
@@ -139,7 +150,7 @@ const KanbanTask = observer(
                     <form>
                         <FormGroup>
                             <ControlLabel>Summary</ControlLabel>
-                            <FormControl.Static>
+                            <FormControl.Static onDoubleClick={this.handleDoubleClick}>
                                 {this.state.editSummary}
                             </FormControl.Static>
                         </FormGroup>
@@ -147,7 +158,7 @@ const KanbanTask = observer(
                             this.state.editDescription &&
                             <FormGroup>
                                 <ControlLabel>Description</ControlLabel>
-                                <FormControl.Static>
+                                <FormControl.Static onDoubleClick={this.handleDoubleClick}>
                                     {this.state.editDescription}
                                 </FormControl.Static>
                             </FormGroup>
