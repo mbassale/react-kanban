@@ -140,7 +140,7 @@ const KanbanTask = observer(
                         <FormGroup>
                             <ControlLabel>Description</ControlLabel>
                             <FormControl name="description" componentClass="textarea" placeholder="Description..."
-                                         value={this.state.editDescription}
+                                         value={this.state.editDescription ? this.state.editDescription : ''}
                                          onChange={this.handleChange} />
                         </FormGroup>
                     </form>
