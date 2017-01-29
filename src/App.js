@@ -4,12 +4,15 @@ import MenuBar from './MenuBar';
 import KanbanBoard from './KanbanBoard';
 import TaskList from './TaskList';
 import Task from './Task';
+import AboutModal from './AboutModal';
+import MenuItemKey from './MenuItemKey';
 
 class App extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
+            showAboutModal: false,
             taskLists: [
                 new TaskList('BackLog', [
                     new Task('Add decorator support', 'This is needed to improve readability'),
@@ -24,13 +27,30 @@ class App extends Component {
                 ])
             ]
         };
+        this.handleMenuItemSelected = this.handleMenuItemSelected.bind(this);
+        this.closeAboutModal = this.closeAboutModal.bind(this);
+    }
+
+    handleMenuItemSelected(menuItemKey) {
+        switch (menuItemKey) {
+            case MenuItemKey.ABOUT:
+                this.setState({ showAboutModal: true });
+                break;
+        }
+    }
+
+    closeAboutModal() {
+        this.setState({
+            showAboutModal: false
+        });
     }
 
     render() {
         return (
             <div className="App">
-                <MenuBar/>
+                <MenuBar onMenuItemSelected={this.handleMenuItemSelected} />
                 <KanbanBoard taskLists={this.state.taskLists} />
+                <AboutModal show={this.state.showAboutModal} onClose={this.closeAboutModal} />
             </div>
         );
     }

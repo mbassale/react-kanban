@@ -3,12 +3,20 @@
  */
 import React, {Component} from 'react';
 import {Navbar, Nav, NavItem} from 'react-bootstrap';
+import MenuItemKey from './MenuItemKey'
 
 class MenuBar extends Component {
 
     constructor(props) {
         super(props);
         this.state = {};
+        this.handleSelect = this.handleSelect.bind(this);
+    }
+
+    handleSelect(eventKey) {
+        if (this.props.onMenuItemSelected) {
+            this.props.onMenuItemSelected(eventKey)
+        }
     }
 
     render() {
@@ -24,7 +32,7 @@ class MenuBar extends Component {
                     <NavItem eventKey={2}>Search</NavItem>
                 </Nav>
                 <Nav pullRight={true}>
-                    <NavItem eventKey={3}>About...</NavItem>
+                    <NavItem eventKey={MenuItemKey.ABOUT} onSelect={this.handleSelect}>About...</NavItem>
                 </Nav>
             </Navbar>
         );
