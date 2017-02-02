@@ -10,14 +10,12 @@ const KanbanBoard = observer(
     class KanbanBoard extends Component {
         constructor(props) {
             super(props);
-            this.state = {
-                taskLists: props.taskLists
-            };
+            this.state = {};
         }
 
         render() {
 
-            const lists = this.state.taskLists.map((item, index) => {
+            const lists = this.props.taskLists.map((item, index) => {
                 return <KanbanList key={index} taskList={item} />
             });
 

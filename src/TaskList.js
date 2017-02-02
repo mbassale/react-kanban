@@ -12,6 +12,19 @@ class TaskList {
 
             newTask: mobx.action.bound(function () {
                 this.tasks.push(new Task());
+            }),
+
+            deleteTask: mobx.action.bound(function (task) {
+                let newTasks = [];
+                for (let i = 0; i < this.tasks.length; i++) {
+                    if (this.tasks[i] != task) {
+                        newTasks.push(this.tasks[i]);
+                    }
+                }
+                this.tasks.replace(newTasks);
+                for (let i = 0; i < this.tasks.length; i++) {
+                    console.log(this.tasks[i].title);
+                }
             })
         })
     }

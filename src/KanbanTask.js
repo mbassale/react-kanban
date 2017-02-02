@@ -10,11 +10,8 @@ import './KanbanTask.css';
 const KanbanTask = observer(
     class KanbanTask extends Component {
 
-        task = null;
-
         constructor(props) {
             super(props);
-            this.task = props.task;
             this.state = {
                 editMode: false,
                 editTitle: props.task.title,
@@ -27,6 +24,7 @@ const KanbanTask = observer(
             this.handleEdit = this.handleEdit.bind(this);
             this.handleSave = this.handleSave.bind(this);
             this.handleCancel = this.handleCancel.bind(this);
+            this.handleDelete = this.handleDelete.bind(this);
             this.handleChange = this.handleChange.bind(this);
             this.handleDoubleClick = this.handleDoubleClick.bind(this);
         }
@@ -38,9 +36,9 @@ const KanbanTask = observer(
         }
 
         handleSave() {
-            this.task.title = this.state.editTitle;
-            this.task.summary = this.state.editSummary;
-            this.task.description = this.state.editDescription;
+            this.props.task.title = this.state.editTitle;
+            this.props.task.summary = this.state.editSummary;
+            this.props.task.description = this.state.editDescription;
             this.setState({
                 editMode: false
             });
@@ -48,11 +46,20 @@ const KanbanTask = observer(
 
         handleCancel() {
             this.setState({
-                editTitle: this.task.title,
-                editSummary: this.task.summary,
-                editDescription: this.task.description,
+                editTitle: this.props.task.title,
+                editSummary: this.props.task.summary,
+                editDescription: this.props.task.description,
                 editMode: false
             });
+        }
+
+        handleDelete() {
+            this.setState({
+                editMode: false
+            });
+            if (this.props.onDelete) {
+                this.props.onDelete(this.props.task);
+            }
         }
 
         handleChange(e) {
@@ -109,6 +116,7 @@ const KanbanTask = observer(
                     <div className="pull-right">
                         <Button className="btn btn-primary btn-xs" onClick={this.handleSave}>Save</Button>
                         <Button className="btn btn-default btn-xs" onClick={this.handleCancel}>Cancel</Button>
+                        <Button className="btn btn-danger btn-xs" onClick={this.handleDelete}>Delete</Button>
                     </div>
                 );
             } else {

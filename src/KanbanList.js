@@ -12,22 +12,24 @@ const KanbanList = observer(
 
         constructor(props) {
             super(props);
-            this.state = {
-                taskList: props.taskList
-            };
+            this.state = {};
             this.handleNewTask = this.handleNewTask.bind(this);
+            this.handleDeleteTask = this.handleDeleteTask.bind(this);
         }
 
         handleNewTask() {
-            this.state.taskList.newTask();
+            this.props.taskList.newTask();
+        }
+
+        handleDeleteTask(task) {
+            this.props.taskList.deleteTask(task);
         }
 
         render() {
-
-            const taskList = this.state.taskList.tasks.map((task, index) => {
-                return <KanbanTask key={index} task={task} />;
+            const taskList = this.props.taskList.tasks.map((task, index) => {
+                return <KanbanTask key={index} taskList={this.props.taskList} task={task} onDelete={this.handleDeleteTask} />;
             });
-            const title = lodash.truncate(this.state.taskList.title, {'length': 16});
+            const title = lodash.truncate(this.props.taskList.title, {'length': 16});
 
             return (
                 <Col xs={6} md={2}>
