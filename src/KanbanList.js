@@ -2,7 +2,7 @@
  * Created by mbassale on 22-01-17.
  */
 import React, {Component} from 'react';
-import {Row, Col} from 'react-bootstrap';
+import {Button, Row, Col} from 'react-bootstrap';
 import KanbanTask from './KanbanTask';
 import {observer} from 'mobx-react';
 import * as lodash from 'lodash';
@@ -15,6 +15,11 @@ const KanbanList = observer(
             this.state = {
                 taskList: props.taskList
             };
+            this.handleNewTask = this.handleNewTask.bind(this);
+        }
+
+        handleNewTask() {
+            this.state.taskList.newTask();
         }
 
         render() {
@@ -27,7 +32,9 @@ const KanbanList = observer(
             return (
                 <Col xs={6} md={2}>
                     <Row>
-                        <h4 className="text-center">{title}</h4>
+                        <h4 className="text-center">{title}&nbsp;
+                            <Button className="btn btn-primary btn-xs" onClick={this.handleNewTask}>New Task</Button>
+                        </h4>
                     </Row>
                     <Row>
                         <Col xs={12}>
