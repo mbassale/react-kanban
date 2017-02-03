@@ -21,7 +21,7 @@ class TaskList {
                         newTasks.push(this.tasks[i]);
                     }
                 }
-                this.tasks.replace(newTasks);
+                this.tasks = mobx.observable(newTasks);
                 for (let i = 0; i < this.tasks.length; i++) {
                     console.log(this.tasks[i].title);
                 }

@@ -10,17 +10,18 @@ import './KanbanTask.css';
 const KanbanTask = observer(
     class KanbanTask extends Component {
 
+        oldTitle = null;
+        oldSummary = null;
+        oldDescription = null;
+
         constructor(props) {
             super(props);
             this.state = {
-                editMode: false,
-                editTitle: props.task.title,
-                editSummary: props.task.summary,
-                editDescription: props.task.description
+                editMode: false
             };
-            this.editTitle = lodash.clone(props.task.title);
-            this.editSummary = lodash.clone(props.task.summary);
-            this.editDescription = lodash.clone(props.task.description);
+            this.oldTitle = props.task.title;
+            this.oldSummary = props.task.summary;
+            this.oldDescription = props.task.description;
             this.handleEdit = this.handleEdit.bind(this);
             this.handleSave = this.handleSave.bind(this);
             this.handleCancel = this.handleCancel.bind(this);
@@ -36,19 +37,16 @@ const KanbanTask = observer(
         }
 
         handleSave() {
-            this.props.task.title = this.state.editTitle;
-            this.props.task.summary = this.state.editSummary;
-            this.props.task.description = this.state.editDescription;
             this.setState({
                 editMode: false
             });
         }
 
         handleCancel() {
+            this.props.task.title = this.oldTitle;
+            this.props.task.summary = this.oldSummary;
+            this.props.task.description = this
             this.setState({
-                editTitle: this.props.task.title,
-                editSummary: this.props.task.summary,
-                editDescription: this.props.task.description,
                 editMode: false
             });
         }
@@ -63,26 +61,16 @@ const KanbanTask = observer(
         }
 
         handleChange(e) {
-            let newState = null;
             switch(e.target.name) {
                 case 'title':
-                    newState = {
-                        editTitle: e.target.value
-                    };
+                    this.props.task.title = e.target.value;
                     break;
                 case 'summary':
-                    newState = {
-                        editSummary: e.target.value
-                    };
+                    this.props.task.summary = e.target.value;
                     break;
                 case 'description':
-                    newState = {
-                        editDescription: e.target.value
-                    };
+                    this.props.task.description = e.target.value;
                     break;
-            }
-            if (newState) {
-                this.setState(newState);
             }
         }
 
@@ -93,18 +81,19 @@ const KanbanTask = observer(
         }
 
         render() {
-            const title = lodash.truncate(this.state.editTitle, {'length': 24});
+            const task = this.props.task;
 
             let panelTitle = null;
             if (this.state.editMode) {
                 panelTitle = (
                     <div className="pull-left">
-                        <FormControl name="title" placeholder={this.state.editTitle} className="form-control input-sm taskTitleEditor"
-                                     value={this.state.editTitle}
+                        <FormControl name="title" placeholder={task.title} className="form-control input-sm taskTitleEditor"
+                                     value={task.title}
                                      onChange={this.handleChange} />
                     </div>
                 );
             } else {
+                const title = lodash.truncate(task.title, {'length': 24});
                 panelTitle = (
                     <span onDoubleClick={this.handleDoubleClick}>{title}</span>
                 );
@@ -141,14 +130,14 @@ const KanbanTask = observer(
                     <form>
                         <FormGroup>
                             <ControlLabel>Summary</ControlLabel>
-                            <FormControl name="summary" componentClass="textarea" placeholder="Summary..."
-                                         value={this.state.editSummary}
+                            <FormControl name="summary" componentClass="textarea" placeholder={task.summary}
+                                         value={task.summary}
                                          onChange={this.handleChange} />
                         </FormGroup>
                         <FormGroup>
                             <ControlLabel>Description</ControlLabel>
-                            <FormControl name="description" componentClass="textarea" placeholder="Description..."
-                                         value={this.state.editDescription ? this.state.editDescription : ''}
+                            <FormControl name="description" componentClass="textarea" placeholder={task.description}
+                                         value={task.description}
                                          onChange={this.handleChange} />
                         </FormGroup>
                     </form>
@@ -159,18 +148,15 @@ const KanbanTask = observer(
                         <FormGroup>
                             <ControlLabel>Summary</ControlLabel>
                             <FormControl.Static onDoubleClick={this.handleDoubleClick}>
-                                {this.state.editSummary}
+                                {task.summary ? task.summary : ''}
                             </FormControl.Static>
                         </FormGroup>
-                        {
-                            this.state.editDescription &&
-                            <FormGroup>
-                                <ControlLabel>Description</ControlLabel>
-                                <FormControl.Static onDoubleClick={this.handleDoubleClick}>
-                                    {this.state.editDescription}
-                                </FormControl.Static>
-                            </FormGroup>
-                        }
+                        <FormGroup>
+                            <ControlLabel>Description</ControlLabel>
+                            <FormControl.Static onDoubleClick={this.handleDoubleClick}>
+                                {task.description ? task.description : ''}
+                            </FormControl.Static>
+                        </FormGroup>
                     </form>
                 );
             }
