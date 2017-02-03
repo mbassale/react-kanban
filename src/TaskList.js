@@ -10,8 +10,18 @@ class TaskList {
             title: title,
             tasks: tasks,
 
+            sortTasks: function () {
+                this.tasks = this.tasks.sort((task1, task2) => {
+                    return task1.index < task2.index ? -1 : 1;
+                });
+            },
+
             newTask: mobx.action.bound(function () {
-                this.tasks.push(new Task());
+                let maxIndex = this.tasks.reduce((maxIndex, task) => {
+                    return maxIndex < task.index ? task.index : maxIndex;
+                }, -1);
+                this.tasks.push(new Task(maxIndex+1));
+                this.sortTasks();
             }),
 
             deleteTask: mobx.action.bound(function (task) {
@@ -22,9 +32,7 @@ class TaskList {
                     }
                 }
                 this.tasks = mobx.observable(newTasks);
-                for (let i = 0; i < this.tasks.length; i++) {
-                    console.log(this.tasks[i].title);
-                }
+                this.sortTasks();
             })
         })
     }

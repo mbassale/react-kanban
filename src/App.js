@@ -13,15 +13,15 @@ const App = observer(
 
         taskLists = [
             new TaskList('BackLog', [
-                new Task('Add decorator support', 'This is needed to improve readability'),
-                new Task('Merge with some themeforest template', 'Default bootstrap theme is ugly')
+                new Task(0, 'Add decorator support', 'This is needed to improve readability'),
+                new Task(1, 'Merge with some themeforest template', 'Default bootstrap theme is ugly')
             ]),
             new TaskList('Doing', [
-                new Task('Create backend', 'Try node, it\'s fast and light on server-side'),
-                new Task('Integrate OAuth', 'Users should use their Google/Whatever accounts')
+                new Task(0, 'Create backend', 'Try node, it\'s fast and light on server-side'),
+                new Task(1, 'Integrate OAuth', 'Users should use their Google/Whatever accounts')
             ]),
             new TaskList('Done', [
-                new Task('Create Git Repo', 'We need undo support for project')
+                new Task(0, 'Create Git Repo', 'We need undo support for project')
             ])
         ];
 
