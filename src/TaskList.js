@@ -10,11 +10,41 @@ class TaskList {
             title: title,
             tasks: tasks,
 
-            sortTasks: function () {
-                this.tasks = this.tasks.sort((task1, task2) => {
-                    return task1.index < task2.index ? -1 : 1;
+            sortTasks: mobx.action.bound(function (priorityTask = null) {
+                if (priorityTask) {
+                    // no task has same index as priority
+                    for (let i = 0; i < this.tasks.length; i++) {
+                        if (this.tasks[i] != priorityTask && this.tasks[i].index == priorityTask.index) {
+                            if (i < (this.tasks.length - 1)) {
+                                this.tasks[i].index++;
+                            } else {
+                                this.tasks[i].index--;
+                            }
+                        }
+                    }
+                }
+                // no task has same indexes
+                for (let i = 0; i < (this.tasks.length - 1); i++) {
+                    if (this.tasks[i].index == this.tasks[i+1].index) {
+                        this.tasks[i+1].index++;
+                        i--;
+                    }
+                }
+                // sort tasks
+                let sortedTasks =  this.tasks.sort((task1, task2) => {
+                    if(task1.index < task2.index) {
+                        return -1;
+                    } else if (task1.index > task2.index) {
+                        return 1;
+                    }
+                    return 0;
                 });
-            },
+                // reindex
+                for (let i = 0; i < sortedTasks.length; i++) {
+                    sortedTasks[i].index = i;
+                }
+                this.tasks = sortedTasks;
+            }),
 
             newTask: mobx.action.bound(function () {
                 let maxIndex = this.tasks.reduce((maxIndex, task) => {

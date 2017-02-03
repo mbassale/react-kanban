@@ -10,6 +10,7 @@ import './KanbanTask.css';
 const KanbanTask = observer(
     class KanbanTask extends Component {
 
+        oldIndex = null;
         oldTitle = null;
         oldSummary = null;
         oldDescription = null;
@@ -19,6 +20,7 @@ const KanbanTask = observer(
             this.state = {
                 editMode: false
             };
+            this.oldIndex = props.task.index;
             this.oldTitle = props.task.title;
             this.oldSummary = props.task.summary;
             this.oldDescription = props.task.description;
@@ -37,15 +39,17 @@ const KanbanTask = observer(
         }
 
         handleSave() {
+            this.props.taskList.sortTasks(this.props.task);
             this.setState({
                 editMode: false
             });
         }
 
         handleCancel() {
+            this.props.task.index = this.oldIndex;
             this.props.task.title = this.oldTitle;
             this.props.task.summary = this.oldSummary;
-            this.props.task.description = this
+            this.props.task.description = this.oldDescription;
             this.setState({
                 editMode: false
             });
@@ -62,6 +66,9 @@ const KanbanTask = observer(
 
         handleChange(e) {
             switch(e.target.name) {
+                case 'index':
+                    this.props.task.index = e.target.value;
+                    break;
                 case 'title':
                     this.props.task.title = e.target.value;
                     break;
@@ -101,8 +108,14 @@ const KanbanTask = observer(
 
             let panelOptions = null;
             if (this.state.editMode) {
+                let selectIndexOptions = lodash.range(this.props.taskList.tasks.length).map((index) => {
+                    return (<option key={index} value={index}>{index+1}</option>)
+                });
                 panelOptions = (
                     <div className="pull-right">
+                        <select className="form-control select-index" name="index" value={task.index} onChange={this.handleChange}>
+                            {selectIndexOptions}
+                        </select>
                         <Button className="btn btn-primary btn-xs" onClick={this.handleSave}>Save</Button>
                         <Button className="btn btn-default btn-xs" onClick={this.handleCancel}>Cancel</Button>
                         <Button className="btn btn-danger btn-xs" onClick={this.handleDelete}>Delete</Button>
@@ -148,13 +161,13 @@ const KanbanTask = observer(
                         <FormGroup>
                             <ControlLabel>Summary</ControlLabel>
                             <FormControl.Static onDoubleClick={this.handleDoubleClick}>
-                                {task.summary ? task.summary : ''}
+                                {task.summary}
                             </FormControl.Static>
                         </FormGroup>
                         <FormGroup>
                             <ControlLabel>Description</ControlLabel>
                             <FormControl.Static onDoubleClick={this.handleDoubleClick}>
-                                {task.description ? task.description : ''}
+                                {task.description}
                             </FormControl.Static>
                         </FormGroup>
                     </form>
