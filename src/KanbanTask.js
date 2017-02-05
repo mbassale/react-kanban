@@ -93,7 +93,7 @@ const KanbanTask = observer(
             let panelTitle = null;
             if (this.state.editMode) {
                 panelTitle = (
-                    <div className="pull-left">
+                    <div className="center-block">
                         <FormControl name="title" placeholder={task.title} className="form-control input-sm taskTitleEditor"
                                      value={task.title}
                                      onChange={this.handleChange} />
@@ -106,29 +106,14 @@ const KanbanTask = observer(
                 );
             }
 
-            let panelOptions = null;
-            if (this.state.editMode) {
-                let selectIndexOptions = lodash.range(this.props.taskList.tasks.length).map((index) => {
-                    return (<option key={index} value={index}>{index+1}</option>)
-                });
-                panelOptions = (
-                    <div className="pull-right">
-                        <select className="form-control select-index" name="index" value={task.index} onChange={this.handleChange}>
-                            {selectIndexOptions}
-                        </select>
-                        <Button className="btn btn-primary btn-xs" onClick={this.handleSave}>Save</Button>
-                        <Button className="btn btn-default btn-xs" onClick={this.handleCancel}>Cancel</Button>
-                        <Button className="btn btn-danger btn-xs" onClick={this.handleDelete}>Delete</Button>
-                    </div>
-                );
-            } else {
+            let panelOptions = <div className="pull-right" />;
+            if (this.state.editMode == false) {
                 panelOptions = (
                     <div className="pull-right">
                         <Button className="btn btn-primary btn-xs" onClick={this.handleEdit}>Edit</Button>
                     </div>
                 );
             }
-
 
             const panelHeader = (
                 <div>
@@ -139,6 +124,9 @@ const KanbanTask = observer(
 
             let panelBody = null;
             if (this.state.editMode) {
+                let selectIndexOptions = lodash.range(this.props.taskList.tasks.length).map((index) => {
+                    return (<option key={index} value={index}>{index+1}</option>)
+                });
                 panelBody = (
                     <form>
                         <FormGroup>
@@ -152,6 +140,16 @@ const KanbanTask = observer(
                             <FormControl name="description" componentClass="textarea" placeholder={task.description}
                                          value={task.description}
                                          onChange={this.handleChange} />
+                        </FormGroup>
+                        <FormGroup>
+                            <div className="center-block">
+                                <select className="form-control select-index input-xs" name="index" value={task.index} onChange={this.handleChange}>
+                                    {selectIndexOptions}
+                                </select>
+                                <Button className="btn btn-primary btn-xs" onClick={this.handleSave}>Save</Button>
+                                <Button className="btn btn-default btn-xs" onClick={this.handleCancel}>Cancel</Button>
+                                <Button className="btn btn-danger btn-xs" onClick={this.handleDelete}>Delete</Button>
+                            </div>
                         </FormGroup>
                     </form>
                 );
@@ -176,8 +174,9 @@ const KanbanTask = observer(
                 );
             }
 
+            const panelStyle = this.state.editMode ? 'primary' : 'default';
             return (
-                <Panel header={panelHeader}>
+                <Panel header={panelHeader} bsStyle={panelStyle}>
                     {panelBody}
                 </Panel>
             );

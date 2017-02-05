@@ -4,7 +4,6 @@
 }
 
 .taskTitleEditor {
-    width: 90px;
     display: inline-block;
     padding-left: 0;
     margin-left: 0;
@@ -12,4 +11,12 @@
 
 .btn-primary {
     margin-right: 3px;
+}
+
+.select-index {
+    height: 22px;
+    width: 55px;
+    padding-top: 0;
+    display: inline-block;
+    margin-right: 2px;
 }
