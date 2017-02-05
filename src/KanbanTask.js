@@ -164,12 +164,14 @@ const KanbanTask = observer(
                                 {task.summary}
                             </FormControl.Static>
                         </FormGroup>
-                        <FormGroup>
-                            <ControlLabel>Description</ControlLabel>
-                            <FormControl.Static onDoubleClick={this.handleDoubleClick}>
-                                {task.description}
-                            </FormControl.Static>
-                        </FormGroup>
+                        {task.description &&
+                            <FormGroup>
+                                <ControlLabel>Description</ControlLabel>
+                                <FormControl.Static onDoubleClick={this.handleDoubleClick}>
+                                    {task.description}
+                                </FormControl.Static>
+                            </FormGroup>
+                        }
                     </form>
                 );
             }
